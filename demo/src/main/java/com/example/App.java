@@ -1,8 +1,10 @@
 package com.example;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -10,16 +12,57 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
 
-        Button btn = new Button("Hello JavaFX");
+        Label title = new Label("Cafe Order");
+        title.setStyle("-fx-font-size:20px; -fx-font-weight:bold;");
 
-        Scene scene = new Scene(btn, 400, 300);
+        ComboBox<String> menuBox = new ComboBox<>();
+        menuBox.getItems().addAll("Mocha","Latte","Americano");
 
-        stage.setTitle("My JavaFX App");
+        ComboBox<String> sizeBox = new ComboBox<>();
+        sizeBox.getItems().addAll("S","M","L");
+
+        ComboBox<String> sweetBox = new ComboBox<>();
+        sweetBox.getItems().addAll("0%","50%","100%");
+
+        Button addBtn = new Button("Add Order");
+
+        TextArea orderArea = new TextArea();
+        orderArea.setPrefHeight(200);
+
+        addBtn.setOnAction(e -> {
+            String menu = menuBox.getValue();
+            String size = sizeBox.getValue();
+            String sweet = sweetBox.getValue();
+
+            int price = Size.getPrice(size);
+
+            orderArea.appendText(menu + "  " + size + "  " + sweet + "  " + price + "\n");
+        });
+
+        GridPane form = new GridPane();
+        form.setHgap(10);
+        form.setVgap(10);
+
+        form.add(new Label("Menu"),0,0);
+        form.add(menuBox,1,0);
+
+        form.add(new Label("Size"),0,1);
+        form.add(sizeBox,1,1);
+
+        form.add(new Label("Sweet"),0,2);
+        form.add(sweetBox,1,2);
+
+        VBox root = new VBox(15,title,form,addBtn,orderArea);
+        root.setPadding(new Insets(20));
+
+        Scene scene = new Scene(root,400,400);
+
+        stage.setTitle("Cafe System");
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         launch();
     }
 }

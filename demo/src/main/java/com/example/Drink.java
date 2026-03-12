@@ -1,16 +1,17 @@
 package com.example;
 
-import java.util.*;
-public class Drink extends Menu{
-    public String size ;
-    public String sweet ;
+public class Drink extends Menu {
+
+    public String size;
+    public String sweet;
 
     public Drink(String name,int price,String size,String sweet){
         super(name,price);
-        this.name=name;
-        this.price=price;
-        this.size=size;
-        this.sweet=sweet;
+        this.size = size;
+        this.sweet = sweet;
+    }
 
+    public String toString(){
+        return name + " Size:" + size + " Sweet:" + sweet + " Price:" + price;
     }
 }
