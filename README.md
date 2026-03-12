@@ -1,3 +1,3 @@
 # java---projek
 
-hallo
+หิวข้าวโว้ย
