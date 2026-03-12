@@ -1,3 +1,2 @@
 # java---projek
-
-hallo
+แตงทำไร
