@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class App extends Application {
 
@@ -52,7 +54,13 @@ public class App extends Application {
         form.add(new Label("Sweet"),0,2);
         form.add(sweetBox,1,2);
 
-        VBox root = new VBox(15,title,form,addBtn,orderArea);
+        Image img = new Image(getClass().getResourceAsStream("/Coffee.png"));
+        ImageView imageView = new ImageView(img);
+
+        imageView.setFitWidth(120);
+        imageView.setPreserveRatio(true);   
+
+        VBox root = new VBox(15,imageView,title,form,addBtn,orderArea);
         root.setPadding(new Insets(20));
 
         Scene scene = new Scene(root,400,400);
