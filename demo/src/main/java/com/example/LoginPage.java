@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 
 public class LoginPage {
 
+    public static Member currentMember;
+
     public static void show(Stage stage){
 
         TextField userField = new TextField();
@@ -26,28 +28,30 @@ public class LoginPage {
 
         loginBtn.setOnAction(e -> {
 
-            Member m = LoginSystem.login(
-                    userField.getText(),
-                    passField.getText()
-            );
+    Member m = LoginSystem.login(
+            userField.getText(),
+            passField.getText()
+    );
 
-            if(m != null){
+    if(m != null){
 
-                if(m.getRole().equals("owner")){
-                    OwnerDashboard.showDashboard();
-                }else{
-                    CustomerPage.show(m);
-                }
+        currentMember = m;
 
-            }else{
-                new Alert(Alert.AlertType.ERROR,"Login Failed").show();
-            }
+        if(m.getRole().equals("owner")){
+            OwnerDashboard.showDashboard();
+        }else{
+            CustomerDashboard.showDashboard(m);
+        }
 
-        });
+        stage.close(); // ปิดหน้า login
 
-        registerBtn.setOnAction(e -> {
-            RegisterPage.show(stage);
-        });
+    }else{
+        new Alert(Alert.AlertType.ERROR,"Login Failed").show();
+    }
+
+});
+
+        registerBtn.setOnAction(e -> RegisterPage.show(stage));
 
         stage.setScene(new Scene(root,300,250));
         stage.setTitle("Login");

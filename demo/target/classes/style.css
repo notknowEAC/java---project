@@ -1,32 +1,44 @@
 .root{
-    -fx-background-color:#f4f6f8;
-    -fx-font-family:"Segoe UI";
+    -fx-background-color: linear-gradient(to bottom,#f6f1eb,#e9dfd3);
+    -fx-font-family: "Segoe UI";
 }
 
+/* Title */
 .title{
-    -fx-font-size:28px;
+    -fx-font-size:32px;
     -fx-font-weight:bold;
+    -fx-text-fill:#4b2e2e;
 }
 
-.card{
-    -fx-background-color:white;
-    -fx-background-radius:15;
-    -fx-border-radius:15;
-    -fx-border-color:#e5e7eb;
-    -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.1),10,0,0,4);
-}
-
+/* Button */
 .button{
-    -fx-background-color:#22c55e;
+    -fx-background-color:#6f4e37;
     -fx-text-fill:white;
-    -fx-font-weight:bold;
+    -fx-font-size:14px;
     -fx-background-radius:10;
+    -fx-padding:8 15;
 }
 
 .button:hover{
-    -fx-background-color:#16a34a;
+    -fx-background-color:#8b5e3c;
 }
 
+/* Card menu */
+.card{
+    -fx-background-color:white;
+    -fx-border-color:#ddd;
+    -fx-border-radius:15;
+    -fx-background-radius:15;
+    -fx-padding:10;
+    -fx-effect:dropshadow(three-pass-box,rgba(0,0,0,0.15),10,0,0,5);
+}
+
+/* ComboBox */
+.combo-box{
+    -fx-background-radius:10;
+}
+
+/* TextArea */
 .text-area{
     -fx-background-radius:10;
 }

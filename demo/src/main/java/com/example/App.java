@@ -20,46 +20,11 @@ public class App extends Application {
         Label title = new Label("☕ PUNPUN Cafe");
         title.getStyleClass().add("title");
 
-        Button loginBtn = new Button("Login / Register");
+        Button loginBtn = new Button("Login");
 
-        loginBtn.setOnAction(e -> {
-
-            TextInputDialog userDialog = new TextInputDialog();
-            userDialog.setHeaderText("Username");
-            String user = userDialog.showAndWait().orElse("");
-
-            TextInputDialog passDialog = new TextInputDialog();
-            passDialog.setHeaderText("Password");
-            String pass = passDialog.showAndWait().orElse("");
-
-            Member member = LoginSystem.login(user, pass);
-
-            if(member == null){
-
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setHeaderText("User not found. Register?");
-
-                if(alert.showAndWait().get() == ButtonType.OK){
-                    LoginSystem.register(user, pass);
-                    member = LoginSystem.login(user, pass);
-                }
-            }
-
-            currentMember = member;
-
-            if(member != null){
-
-                if(member.getRole().equals("owner")){
-                    OwnerDashboard.showDashboard();
-                }else{
-                    new Alert(Alert.AlertType.INFORMATION,
-                            "Login Success").show();
-                }
-
-            }
-
-        });
-
+    loginBtn.setOnAction(e -> {
+        LoginPage.show(new Stage());
+    });
         ComboBox<String> menuBox = new ComboBox<>();
         menuBox.getItems().addAll(
             "Americano","Espresso","Cappuccino","Mocha","Latte",
@@ -91,37 +56,33 @@ public class App extends Application {
 
         addBtn.setOnAction(e -> {
 
-            String menu = menuBox.getValue();
-            String size = sizeBox.getValue();
-            String sweet = sweetBox.getValue();
-            int qty = Integer.parseInt(quantityBox.getValue());
+    String menu = menuBox.getValue();
+    String size = sizeBox.getValue();
+    String sweet = sweetBox.getValue();
+    int qty = Integer.parseInt(quantityBox.getValue());
 
-            int price = Size.getPrice(size) + 50;
-            int subtotal = price * qty;
+    int price = Size.getPrice(size) + 50;
+    int subtotal = price * qty;
 
-            total += subtotal;
+    total += subtotal;
 
-            if(currentMember != null){
+    if(LoginPage.currentMember != null){
 
-                int point = PointSystem.calculatePoint(subtotal);
-                currentMember.addPoint(point);
+        int point = PointSystem.calculatePoint(subtotal);
 
-            }
+        LoginPage.currentMember.addPoint(point);
 
-            JSONDatabase.saveOrder(menu, subtotal);
+    }
 
-            orderArea.appendText(
-                menu + " " + size + " " + sweet + " x" + qty + " = " + subtotal + " bath\n"
-            );
+    JSONDatabase.saveOrder(menu, subtotal);
 
-            totalLabel.setText("Total : " + total + " bath");
-        });
+    orderArea.appendText(
+            menu + " " + size + " " + sweet +
+            " x" + qty + " = " + subtotal + " bath\n"
+    );
 
-        Button dashboardBtn = new Button("Owner Dashboard");
-
-        dashboardBtn.setOnAction(e -> {
-            OwnerDashboard.showDashboard();
-        });
+    totalLabel.setText("Total : " + total + " bath");
+});
 
         GridPane form = new GridPane();
         form.setHgap(10);
@@ -188,17 +149,23 @@ public class App extends Application {
             );
         }
 
-        VBox root = new VBox(
-                15,
-                title,
-                loginBtn,
-                gallery,
-                form,
-                addBtn,
-                dashboardBtn,
-                orderArea,
-                totalLabel
+        VBox orderCard = new VBox(10,
+        new Label("Order List"),
+        orderArea,
+        totalLabel
         );
+
+        orderCard.getStyleClass().add("card");
+
+        VBox root = new VBox(
+    20,
+    title,
+    loginBtn,
+    gallery,
+    form,
+    addBtn,
+    orderCard
+);
 
         root.setPadding(new Insets(20));
 
