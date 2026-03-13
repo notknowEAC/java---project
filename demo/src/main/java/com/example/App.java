@@ -106,6 +106,7 @@ public class App extends Application {
         // --- ประกอบร่าง Layout ---
         VBox root = new VBox(15, title, gallery, form, addBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
+<<<<<<< HEAD
         
         // ใส่ ScrollPane เพราะเมนูเยอะขึ้นจนอาจล้นจอ
         ScrollPane scrollPane = new ScrollPane(root);
@@ -119,6 +120,17 @@ public class App extends Application {
         } catch (Exception ex) {
             System.err.println("CSS file not found, skipping styles.");
         }
+=======
+
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+
+        Scene scene1 = new Scene(scrollPane, 900, 750);
+
+        scene1.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
+>>>>>>> 8f04ae702f4d6cb5f6b70461e8a32fe700890aaf
 
         stage.setTitle("PUNPUN Cafe");
         stage.setScene(scene1);
