@@ -1,7 +1,7 @@
-com\example\Menu.class
-com\example\Dessert.class
-com\example\Drink.class
-com\example\Size.class
-com\example\App.class
-com\example\Controller.class
-com\example\mocca.class
+com/example/mocca.class
+com/example/App.class
+com/example/Menu.class
+com/example/Controller.class
+com/example/Drink.class
+com/example/Size.class
+com/example/Dessert.class
