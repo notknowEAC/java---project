@@ -19,7 +19,7 @@ public class App extends Application {
         title.getStyleClass().add("title");
 
         ComboBox<String> menuBox = new ComboBox<>();
-        menuBox.getItems().addAll("Mocha","Latte","Americano","Lemon Tea","Chocolate");
+        menuBox.getItems().addAll("Americano","Espresso","Cappuccino","Mocha","Latte","Green Tea","Thai Tea","Milk Tea","Chocolate","Lemon Tea");
         menuBox.getSelectionModel().selectFirst();
 
         ComboBox<String> sizeBox = new ComboBox<>();
@@ -79,17 +79,19 @@ public class App extends Application {
         gallery.setVgap(12);
         gallery.setPadding(new Insets(10));
 
-        // top row: five main drinks (sixth cell left empty)
-        gallery.add(createBeverageCard("Mocha", "/mocca.PNG"), 0, 0);
-        gallery.add(createBeverageCard("Latte", "/latte.PNG"), 1, 0);
-        gallery.add(createBeverageCard("Americano", "/americano.PNG"), 2, 0);
-        gallery.add(createBeverageCard("Green Tea", "/greentea.PNG"), 3, 0);
-        gallery.add(createBeverageCard("Thai Tea", "/thaitea.PNG"), 4, 0);
-        // bottom row: the requested three beverages
-        gallery.add(createBeverageCard("Milk Tea", "/milktea.PNG"), 0, 1);
-        gallery.add(createBeverageCard("Chocolate", "/chocolate.PNG"), 1, 1);
-        gallery.add(createBeverageCard("Lemon Tea", "/lemontea.PNG"), 2, 1);
-
+    // top row: five main drinks (sixth cell left empty)
+        gallery.add(createBeverageCard("Americano", "/americano.PNG"), 0, 0);
+        gallery.add(createBeverageCard("Espresso", "/espresso.PNG"), 1, 0);
+        gallery.add(createBeverageCard("Cappuccino", "/cappuccino.PNG"), 2, 0);
+        gallery.add(createBeverageCard("Mocha", "/mocca.PNG"), 3, 0);
+        gallery.add(createBeverageCard("Latte", "/latte.PNG"), 4, 0);
+    // bottom row: the requested three beverages
+        gallery.add(createBeverageCard("Green Tea", "/greentea.PNG"), 0, 1);
+        gallery.add(createBeverageCard("Thai Tea", "/thaitea.PNG"), 1, 1);
+        gallery.add(createBeverageCard("Milk Tea", "/milktea.PNG"), 2, 1);
+        gallery.add(createBeverageCard("Chocolate", "/chocolate.PNG"), 3, 1);
+        gallery.add(createBeverageCard("Lemon Tea", "/lemontea.PNG"), 4, 1);
+    
 
         VBox root = new VBox(15, title, gallery, form, addBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
