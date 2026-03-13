@@ -12,10 +12,23 @@ import javafx.scene.image.ImageView;
 public class App extends Application {
 
     private int total = 0;
-
+    private Member currentMember;
     @Override
     public void start(Stage stage) {
+        TextInputDialog login = new TextInputDialog();
+        login.setHeaderText("Login - Enter username");
+        String user = login.showAndWait().orElse("");
 
+        TextInputDialog pass = new TextInputDialog();
+        pass.setHeaderText("Enter password");
+        String password = pass.showAndWait().orElse("");
+
+        currentMember = LoginSystem.login(user,password);
+
+        if(currentMember == null){
+            LoginSystem.register(user,password);
+            currentMember = LoginSystem.login(user,password);
+        }
         Label title = new Label("☕ PUNPUN Cafe");
         title.getStyleClass().add("title");
 
@@ -58,6 +71,11 @@ public class App extends Application {
             int subtotal = price * qty;
 
             total += subtotal;
+            
+            int point = PointSystem.calculatePoint(subtotal);
+            currentMember.addPoint(point);
+
+            JSONDatabase.saveOrder(menu, subtotal);
 
             orderArea.appendText(
                 menu + "  " + size + "  " + sweet + "  x" + qty + "  = " + subtotal + " bath\n"
@@ -65,7 +83,11 @@ public class App extends Application {
 
             totalLabel.setText("Total : " + total + " bath");
         });
+        Button dashboardBtn = new Button("Owner Dashboard");
 
+        dashboardBtn.setOnAction(e -> {
+        OwnerDashboard.showDashboard();
+        });
         GridPane form = new GridPane();
         form.setHgap(10);
         form.setVgap(10);
@@ -131,7 +153,7 @@ public class App extends Application {
             );
         }
 
-        VBox root = new VBox(15, title, gallery, form, addBtn, orderArea, totalLabel);
+       VBox root = new VBox(15, title, gallery, form, addBtn, dashboardBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
 
         ScrollPane scrollPane = new ScrollPane(root);
