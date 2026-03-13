@@ -30,7 +30,7 @@ public class App extends Application {
             "Americano","Espresso","Cappuccino","Mocha","Latte",
             "Matcha","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Macaron"
+            "Matcha Custard","Macaron","Pudding","Pan Cake","Ice Cream"
         );
         menuBox.getSelectionModel().selectFirst();
 
@@ -121,7 +121,7 @@ public class App extends Application {
 
         for (int i = 0; i < drinkNames.length; i++) {
             gallery.add(
-                createBeverageCard(drinkNames[i], drinkPaths[i]),
+                createBeverageCard(drinkNames[i], drinkPaths[i], menuBox, sizeBox, sweetBox, quantityBox),
                 i % 5,
                 (i / 5) + 1
             );
@@ -129,12 +129,12 @@ public class App extends Application {
 
         String[] dessertNames = {
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Macaron"
+            "Matcha Custard","Macaron","Pudding","Pan Cake","Ice Cream"
         };
 
         String[] dessertPaths = {
             "/buttercake.PNG","/chocolatecake.PNG","/cookie.PNG","/crepecake.PNG","/croissant.PNG",
-            "/matchacustard.PNG","/macaron.PNG"
+            "/matchacustard.PNG","/macaron.PNG","/pudding.PNG","/pancake.PNG","/icecream.PNG"
         };
 
         Label cat2 = new Label("🍰 Dessert");
@@ -143,7 +143,7 @@ public class App extends Application {
 
         for (int i = 0; i < dessertNames.length; i++) {
             gallery.add(
-                createBeverageCard(dessertNames[i], dessertPaths[i]),
+                createBeverageCard(dessertNames[i], dessertPaths[i], menuBox, sizeBox, sweetBox, quantityBox),
                 i % 5,
                 (i / 5) + 4
             );
@@ -157,20 +157,23 @@ public class App extends Application {
 
         orderCard.getStyleClass().add("card");
 
-        VBox root = new VBox(
-    20,
-    title,
-    loginBtn,
-    gallery,
-    form,
-    addBtn,
-    orderCard
-);
+        VBox topBar = new VBox(10, title, loginBtn);
+        topBar.setAlignment(javafx.geometry.Pos.TOP_LEFT);
 
+        VBox mainContent = new VBox(20, topBar, gallery, form, addBtn, orderCard);
+        mainContent.setAlignment(javafx.geometry.Pos.TOP_CENTER);
+        mainContent.setMaxWidth(820);
+
+        StackPane centered = new StackPane(mainContent);
+        centered.setPadding(new Insets(20));
+        StackPane.setAlignment(mainContent, javafx.geometry.Pos.TOP_CENTER);
+
+        VBox root = new VBox(centered);
         root.setPadding(new Insets(20));
 
         ScrollPane scrollPane = new ScrollPane(root);
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         Scene scene = new Scene(scrollPane, 900, 750);
 
@@ -183,7 +186,14 @@ public class App extends Application {
         stage.show();
     }
 
-    private VBox createBeverageCard(String name, String resourcePath) {
+    private VBox createBeverageCard(
+            String name,
+            String resourcePath,
+            ComboBox<String> menuBox,
+            ComboBox<String> sizeBox,
+            ComboBox<String> sweetBox,
+            ComboBox<String> quantityBox
+    ) {
 
         Image image;
 
@@ -196,12 +206,12 @@ public class App extends Application {
         }
 
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(120);
-        imageView.setFitWidth(120);
+        imageView.setFitHeight(160);
+        imageView.setFitWidth(160);
         imageView.setPreserveRatio(true);
 
         Label label = new Label(name);
-        label.setStyle("-fx-font-size:12px; -fx-font-weight:bold;");
+        label.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
 
         VBox card = new VBox(5, imageView, label);
         card.setPadding(new Insets(10));
@@ -216,6 +226,13 @@ public class App extends Application {
         card.setOnMouseExited(e -> {
             card.setScaleX(1);
             card.setScaleY(1);
+        });
+
+        card.setOnMouseClicked(e -> {
+            menuBox.setValue(name);
+            sizeBox.getSelectionModel().selectFirst();
+            sweetBox.getSelectionModel().selectFirst();
+            quantityBox.getSelectionModel().selectFirst();
         });
 
         return card;
