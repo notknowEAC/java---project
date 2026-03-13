@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.ScrollPane;
 
 public class App extends Application {
     private int total = 0;
@@ -110,8 +109,10 @@ public class App extends Application {
         scrollPane.setFitToWidth(true);
 
         Scene scene1 = new Scene(scrollPane, 900, 750);
- 
 
+        scene1.getStylesheets().add(
+            getClass().getResource("/style.css").toExternalForm()
+        );
 
         stage.setTitle("PUNPUN Cafe");
         stage.setScene(scene1);
