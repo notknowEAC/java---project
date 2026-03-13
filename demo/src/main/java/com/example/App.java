@@ -11,12 +11,12 @@ import javafx.scene.image.ImageView;
 
 
 public class App extends Application {
-
+    private int total = 0;
     @Override
     public void start(Stage stage) {
 
-        Label title = new Label("Cafe Order");
-        title.setStyle("-fx-font-size:20px; -fx-font-weight:bold;");
+        Label title = new Label("☕ PUNPUN Cafe");
+        title.getStyleClass().add("title");
 
         ComboBox<String> menuBox = new ComboBox<>();
         menuBox.getItems().addAll("Mocha","Latte","Americano","Lemon Tea","Chocolate");
@@ -37,18 +37,26 @@ public class App extends Application {
         Button addBtn = new Button("Add Order");
 
         TextArea orderArea = new TextArea();
+        Label totalLabel = new Label("Total : 0");
+        totalLabel.getStyleClass().add("title");
         orderArea.setPrefHeight(200);
 
         addBtn.setOnAction(e -> {
-            String menu = menuBox.getValue();
-            String size = sizeBox.getValue();
-            String sweet = sweetBox.getValue();
-            String qty = quantityBox.getValue();
 
-            int price = Size.getPrice(size);
+    String menu = menuBox.getValue();
+    String size = sizeBox.getValue();
+    String sweet = sweetBox.getValue();
+    int qty = Integer.parseInt(quantityBox.getValue());
 
-            orderArea.appendText(menu + "  " + size + "  " + sweet + "  " + qty + "  " + price + "\n");
-        });
+    int price = Size.getPrice(size) + 50; // base drink price
+    int subtotal = price * qty;
+
+    total += subtotal;
+
+    orderArea.appendText(menu + "  " + size + "  " + sweet + "  x" + qty + "  = " + subtotal + "\n");
+
+    totalLabel.setText("Total : " + total + " บาท");
+    });
 
         GridPane form = new GridPane();
         form.setHgap(10);
@@ -83,9 +91,10 @@ public class App extends Application {
         gallery.add(createBeverageCard("Lemon Tea", "/lemontea.PNG"), 2, 1);
 
 
-        VBox root = new VBox(15, title, gallery, form, addBtn, orderArea);
+        VBox root = new VBox(15, title, gallery, form, addBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
-        Scene scene1 = new Scene(root, 600, 700);
+        Scene scene1 = new Scene(root, 900, 750);
+        scene1.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
  
 
 
@@ -96,39 +105,40 @@ public class App extends Application {
 
     private VBox createBeverageCard(String name, String resourcePath) {
 
-        Image image;
+    Image image;
 
-        java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
-        if (stream == null) {
-            System.err.println("Resource not found: " + resourcePath);
-            image = new Image("https://via.placeholder.com/180");
-        } else {
-            try {
-                image = new Image(stream);
-            } catch (Exception e) {
-                System.err.println("Failed to load image " + resourcePath + ": " + e);
-                image = new Image("https://via.placeholder.com/180");
-            }
-        }
+    java.io.InputStream stream = getClass().getResourceAsStream(resourcePath);
+    if (stream == null) {
+        image = new Image("https://via.placeholder.com/180");
+    } else {
+        image = new Image(stream);
+    }
 
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(160);
-        imageView.setFitWidth(160);
-        imageView.setPreserveRatio(true);
+    ImageView imageView = new ImageView(image);
+    imageView.setFitHeight(140);
+    imageView.setFitWidth(140);
+    imageView.setPreserveRatio(true);
 
-        Label label = new Label(name);
-        label.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
+    Label label = new Label(name);
+    label.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
 
-        VBox card = new VBox(7, imageView, label);
-        card.setPadding(new Insets(5));
-        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 6; -fx-background-radius: 6; -fx-background-color: #f9f9f9;");
-        card.setMinWidth(200);
-        card.setMaxWidth(200);
-        card.setAlignment(javafx.geometry.Pos.CENTER);
+    VBox card = new VBox(7, imageView, label);
+    card.setPadding(new Insets(10));
+    card.setAlignment(javafx.geometry.Pos.CENTER);
+
+    card.getStyleClass().add("card");
+
+    card.setOnMouseEntered(e -> card.setScaleX(1.05));
+    card.setOnMouseEntered(e -> card.setScaleY(1.05));
+
+    card.setOnMouseExited(e -> {
+        card.setScaleX(1);
+        card.setScaleY(1);
+    });
 
     return card;
-}
-    public static void main(String[] args){
+}    
+public static void main(String[] args){
         launch();
     }
 }
