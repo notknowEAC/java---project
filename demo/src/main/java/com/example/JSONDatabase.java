@@ -2,66 +2,96 @@ package com.example;
 
 import java.io.FileWriter;
 import java.io.FileReader;
-import java.io.File;
-import java.io.IOException;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class JSONDatabase {
 
-    public static void saveOrder(String menu, int price) {
+    public static void saveMember(Member m){
 
-        JSONArray orders = new JSONArray();
+        JSONArray members = loadMembers();
 
         JSONObject obj = new JSONObject();
-        obj.put("menu", menu);
-        obj.put("price", price);
+        obj.put("username",m.getUsername());
+        obj.put("password",m.getPassword());
+        obj.put("role",m.getRole());
+
+        members.add(obj);
+
+        try{
+
+            FileWriter file = new FileWriter("members.json");
+            file.write(members.toJSONString());
+            file.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static JSONArray loadMembers(){
+
+        try{
+
+            JSONParser parser = new JSONParser();
+            FileReader reader = new FileReader("members.json");
+
+            return (JSONArray) parser.parse(reader);
+
+        }catch(Exception e){
+            return new JSONArray();
+        }
+    }
+
+    public static void saveOrder(String menu,int price){
+
+        JSONArray orders = loadOrders();
+
+        JSONObject obj = new JSONObject();
+        obj.put("menu",menu);
+        obj.put("price",price);
 
         orders.add(obj);
 
-        try {
+        try{
 
-            FileWriter file = new FileWriter("orders.json", true);
+            FileWriter file = new FileWriter("orders.json");
             file.write(orders.toJSONString());
-            file.flush();
             file.close();
 
-        } catch (IOException e) {
+        }catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public static JSONArray loadOrders(){
+
+        try{
+
+            JSONParser parser = new JSONParser();
+            FileReader reader = new FileReader("orders.json");
+
+            return (JSONArray) parser.parse(reader);
+
+        }catch(Exception e){
+            return new JSONArray();
         }
     }
 
     public static int getTotalSales(){
 
+        JSONArray orders = loadOrders();
+
         int total = 0;
 
-        try{
+        for(Object o:orders){
 
-            File file = new File("orders.json");
+            JSONObject obj = (JSONObject)o;
 
-            if(!file.exists()){
-                return 0;
-            }
+            long price = (long)obj.get("price");
 
-            JSONParser parser = new JSONParser();
-
-            FileReader reader = new FileReader(file);
-
-            JSONArray orders = (JSONArray) parser.parse(reader);
-
-            for(Object o : orders){
-
-                JSONObject obj = (JSONObject) o;
-
-                long price = (long) obj.get("price");
-
-                total += price;
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
+            total += price;
         }
 
         return total;

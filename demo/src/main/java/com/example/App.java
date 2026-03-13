@@ -17,30 +17,48 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
 
-        TextInputDialog userDialog = new TextInputDialog();
-        userDialog.setHeaderText("Enter Username");
-        String user = userDialog.showAndWait().orElse("");
-
-        TextInputDialog passDialog = new TextInputDialog();
-        passDialog.setHeaderText("Enter Password");
-        String pass = passDialog.showAndWait().orElse("");
-
-        Member member = LoginSystem.login(user, pass);
-
-        if(member == null){
-            LoginSystem.register(user, pass);
-            member = LoginSystem.login(user, pass);
-        }
-
-        currentMember = member;
-
-        if(member.getRole().equals("owner")){
-            OwnerDashboard.showDashboard();
-            return;
-        }
-
         Label title = new Label("☕ PUNPUN Cafe");
         title.getStyleClass().add("title");
+
+        Button loginBtn = new Button("Login / Register");
+
+        loginBtn.setOnAction(e -> {
+
+            TextInputDialog userDialog = new TextInputDialog();
+            userDialog.setHeaderText("Username");
+            String user = userDialog.showAndWait().orElse("");
+
+            TextInputDialog passDialog = new TextInputDialog();
+            passDialog.setHeaderText("Password");
+            String pass = passDialog.showAndWait().orElse("");
+
+            Member member = LoginSystem.login(user, pass);
+
+            if(member == null){
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("User not found. Register?");
+
+                if(alert.showAndWait().get() == ButtonType.OK){
+                    LoginSystem.register(user, pass);
+                    member = LoginSystem.login(user, pass);
+                }
+            }
+
+            currentMember = member;
+
+            if(member != null){
+
+                if(member.getRole().equals("owner")){
+                    OwnerDashboard.showDashboard();
+                }else{
+                    new Alert(Alert.AlertType.INFORMATION,
+                            "Login Success").show();
+                }
+
+            }
+
+        });
 
         ComboBox<String> menuBox = new ComboBox<>();
         menuBox.getItems().addAll(
@@ -83,8 +101,12 @@ public class App extends Application {
 
             total += subtotal;
 
-            int point = PointSystem.calculatePoint(subtotal);
-            currentMember.addPoint(point);
+            if(currentMember != null){
+
+                int point = PointSystem.calculatePoint(subtotal);
+                currentMember.addPoint(point);
+
+            }
 
             JSONDatabase.saveOrder(menu, subtotal);
 
@@ -166,20 +188,31 @@ public class App extends Application {
             );
         }
 
-        VBox root = new VBox(15, title, gallery, form, addBtn, dashboardBtn, orderArea, totalLabel);
+        VBox root = new VBox(
+                15,
+                title,
+                loginBtn,
+                gallery,
+                form,
+                addBtn,
+                dashboardBtn,
+                orderArea,
+                totalLabel
+        );
+
         root.setPadding(new Insets(20));
 
         ScrollPane scrollPane = new ScrollPane(root);
         scrollPane.setFitToWidth(true);
 
-        Scene scene1 = new Scene(scrollPane, 900, 750);
+        Scene scene = new Scene(scrollPane, 900, 750);
 
-        scene1.getStylesheets().add(
-            getClass().getResource("/style.css").toExternalForm()
+        scene.getStylesheets().add(
+                getClass().getResource("/style.css").toExternalForm()
         );
 
         stage.setTitle("PUNPUN Cafe");
-        stage.setScene(scene1);
+        stage.setScene(scene);
         stage.show();
     }
 

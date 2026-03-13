@@ -1,27 +1,34 @@
 package com.example;
 
-import java.util.HashMap;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class LoginSystem {
 
-    private static HashMap<String, Member> members = new HashMap<>();
+    public static Member login(String user,String pass){
 
-    static {
-        members.put("owner", new Member("owner", "1234", "owner"));
-    }
+        JSONArray members = JSONDatabase.loadMembers();
 
-    public static void register(String user, String pass) {
-        members.put(user, new Member(user, pass, "customer"));
-    }
+        for(Object o:members){
 
-    public static Member login(String user, String pass) {
+            JSONObject obj = (JSONObject)o;
 
-        Member m = members.get(user);
+            String u = (String)obj.get("username");
+            String p = (String)obj.get("password");
+            String r = (String)obj.get("role");
 
-        if (m != null && m.getPassword().equals(pass)) {
-            return m;
+            if(u.equals(user) && p.equals(pass)){
+                return new Member(u,p,r);
+            }
         }
 
         return null;
+    }
+
+    public static void register(String user,String pass){
+
+        Member m = new Member(user,pass,"customer");
+
+        JSONDatabase.saveMember(m);
     }
 }
