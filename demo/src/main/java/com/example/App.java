@@ -22,8 +22,9 @@ public class App extends Application {
         ComboBox<String> menuBox = new ComboBox<>();
         menuBox.getItems().addAll(
             "Americano","Espresso","Cappuccino","Mocha","Latte",
-            "Green Tea","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
-            "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant"
+            "Matcha","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
+            "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
+            "Matcha Custard","Magaron"
         );
         menuBox.getSelectionModel().selectFirst();
 
@@ -88,12 +89,12 @@ public class App extends Application {
 
         String[] drinkNames = {
             "Americano","Espresso","Cappuccino","Mocha","Latte",
-            "Green Tea","Thai Tea","Milk Tea","Chocolate","Lemon Tea"
+            "Matcha","Thai Tea","Milk Tea","Chocolate","Lemon Tea"
         };
 
         String[] drinkPaths = {
             "/americano.PNG","/espresso.PNG","/cappuccino.PNG","/mocca.PNG","/latte.PNG",
-            "/greentea.PNG","/thaitea.PNG","/milktea.PNG","/chocolate.PNG","/lemontea.PNG"
+            "/matcha.PNG","/thaitea.PNG","/milktea.PNG","/chocolate.PNG","/lemontea.PNG"
         };
 
         Label cat1 = new Label("☕ Drinks");
@@ -109,11 +110,13 @@ public class App extends Application {
         }
 
         String[] dessertNames = {
-            "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant"
+            "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
+            "Matcha Custard","Magaron"
         };
 
         String[] dessertPaths = {
-            "/buttercake.PNG","/chocolatecake.PNG","/cookie.PNG","/crepecake.PNG","/croissant.PNG"
+            "/buttercake.PNG","/chocolatecake.PNG","/cookie.PNG","/crepecake.PNG","/croissant.PNG",
+            "/matchacustard.PNG","/macaron.PNG"
         };
 
         Label cat2 = new Label("🍰 Dessert");
@@ -124,7 +127,7 @@ public class App extends Application {
             gallery.add(
                 createBeverageCard(dessertNames[i], dessertPaths[i]),
                 i % 5,
-                4
+                (i / 5) + 4
             );
         }
 
