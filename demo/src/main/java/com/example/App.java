@@ -19,7 +19,11 @@ public class App extends Application {
         title.getStyleClass().add("title");
 
         ComboBox<String> menuBox = new ComboBox<>();
-        menuBox.getItems().addAll("Americano","Espresso","Cappuccino","Mocha","Latte","Green Tea","Thai Tea","Milk Tea","Chocolate","Lemon Tea");
+        menuBox.getItems().addAll(
+            "Americano","Espresso","Cappuccino","Mocha","Latte",
+            "Green Tea","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
+            "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant"
+        );
         menuBox.getSelectionModel().selectFirst();
 
         ComboBox<String> sizeBox = new ComboBox<>();
@@ -79,19 +83,25 @@ public class App extends Application {
         gallery.setVgap(12);
         gallery.setPadding(new Insets(10));
 
-    // top row: five main drinks (sixth cell left empty)
+    //row1
         gallery.add(createBeverageCard("Americano", "/americano.PNG"), 0, 0);
         gallery.add(createBeverageCard("Espresso", "/espresso.PNG"), 1, 0);
         gallery.add(createBeverageCard("Cappuccino", "/cappuccino.PNG"), 2, 0);
         gallery.add(createBeverageCard("Mocha", "/mocca.PNG"), 3, 0);
         gallery.add(createBeverageCard("Latte", "/latte.PNG"), 4, 0);
-    // bottom row: the requested three beverages
+    // row2
         gallery.add(createBeverageCard("Green Tea", "/greentea.PNG"), 0, 1);
         gallery.add(createBeverageCard("Thai Tea", "/thaitea.PNG"), 1, 1);
         gallery.add(createBeverageCard("Milk Tea", "/milktea.PNG"), 2, 1);
         gallery.add(createBeverageCard("Chocolate", "/chocolate.PNG"), 3, 1);
         gallery.add(createBeverageCard("Lemon Tea", "/lemontea.PNG"), 4, 1);
     
+        //row 3 dessert
+        gallery.add(createBeverageCard("Butter Cake", "/buttercake.PNG"), 0, 2);
+        gallery.add(createBeverageCard("Chocolate Cake", "/chocolatecake.PNG"), 1, 2);
+        gallery.add(createBeverageCard("Cookie", "/cookie.PNG"), 2, 2);
+        gallery.add(createBeverageCard("Crepes", "/crepecake.PNG"), 3, 2);
+        gallery.add(createBeverageCard("Croissant", "/croissant.PNG"), 4, 2);
 
         VBox root = new VBox(15, title, gallery, form, addBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
@@ -125,7 +135,7 @@ public class App extends Application {
     label.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
 
     VBox card = new VBox(7, imageView, label);
-    card.setPadding(new Insets(10));
+    card.setPadding(new Insets(15));
     card.setAlignment(javafx.geometry.Pos.CENTER);
 
     card.getStyleClass().add("card");
