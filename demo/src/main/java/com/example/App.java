@@ -13,22 +13,32 @@ public class App extends Application {
 
     private int total = 0;
     private Member currentMember;
+
     @Override
     public void start(Stage stage) {
-        TextInputDialog login = new TextInputDialog();
-        login.setHeaderText("Login - Enter username");
-        String user = login.showAndWait().orElse("");
 
-        TextInputDialog pass = new TextInputDialog();
-        pass.setHeaderText("Enter password");
-        String password = pass.showAndWait().orElse("");
+        TextInputDialog userDialog = new TextInputDialog();
+        userDialog.setHeaderText("Enter Username");
+        String user = userDialog.showAndWait().orElse("");
 
-        currentMember = LoginSystem.login(user,password);
+        TextInputDialog passDialog = new TextInputDialog();
+        passDialog.setHeaderText("Enter Password");
+        String pass = passDialog.showAndWait().orElse("");
 
-        if(currentMember == null){
-            LoginSystem.register(user,password);
-            currentMember = LoginSystem.login(user,password);
+        Member member = LoginSystem.login(user, pass);
+
+        if(member == null){
+            LoginSystem.register(user, pass);
+            member = LoginSystem.login(user, pass);
         }
+
+        currentMember = member;
+
+        if(member.getRole().equals("owner")){
+            OwnerDashboard.showDashboard();
+            return;
+        }
+
         Label title = new Label("☕ PUNPUN Cafe");
         title.getStyleClass().add("title");
 
@@ -37,7 +47,7 @@ public class App extends Application {
             "Americano","Espresso","Cappuccino","Mocha","Latte",
             "Matcha","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Magaron"
+            "Matcha Custard","Macaron"
         );
         menuBox.getSelectionModel().selectFirst();
 
@@ -56,9 +66,10 @@ public class App extends Application {
         Button addBtn = new Button("Add Order");
 
         TextArea orderArea = new TextArea();
+        orderArea.setPrefHeight(150);
+
         Label totalLabel = new Label("Total : 0");
         totalLabel.getStyleClass().add("title");
-        orderArea.setPrefHeight(150);
 
         addBtn.setOnAction(e -> {
 
@@ -71,23 +82,25 @@ public class App extends Application {
             int subtotal = price * qty;
 
             total += subtotal;
-            
+
             int point = PointSystem.calculatePoint(subtotal);
             currentMember.addPoint(point);
 
             JSONDatabase.saveOrder(menu, subtotal);
 
             orderArea.appendText(
-                menu + "  " + size + "  " + sweet + "  x" + qty + "  = " + subtotal + " bath\n"
+                menu + " " + size + " " + sweet + " x" + qty + " = " + subtotal + " bath\n"
             );
 
             totalLabel.setText("Total : " + total + " bath");
         });
+
         Button dashboardBtn = new Button("Owner Dashboard");
 
         dashboardBtn.setOnAction(e -> {
-        OwnerDashboard.showDashboard();
+            OwnerDashboard.showDashboard();
         });
+
         GridPane form = new GridPane();
         form.setHgap(10);
         form.setVgap(10);
@@ -133,7 +146,7 @@ public class App extends Application {
 
         String[] dessertNames = {
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Magaron"
+            "Matcha Custard","Macaron"
         };
 
         String[] dessertPaths = {
@@ -153,7 +166,7 @@ public class App extends Application {
             );
         }
 
-       VBox root = new VBox(15, title, gallery, form, addBtn, dashboardBtn, orderArea, totalLabel);
+        VBox root = new VBox(15, title, gallery, form, addBtn, dashboardBtn, orderArea, totalLabel);
         root.setPadding(new Insets(20));
 
         ScrollPane scrollPane = new ScrollPane(root);

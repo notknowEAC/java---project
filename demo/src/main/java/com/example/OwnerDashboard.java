@@ -7,22 +7,27 @@ import javafx.stage.Stage;
 
 public class OwnerDashboard {
 
-    public static void showDashboard() {
+    public static void showDashboard(){
 
         Stage stage = new Stage();
 
-        Label title = new Label("Owner Dashboard");
+        int totalSales = JSONDatabase.getTotalSales();
+        int profit = totalSales * 40 / 100; // กำไร 40%
 
-        Label report = new Label("Order Report / Sales Data");
+        Label title = new Label("☕ Owner Dashboard");
 
-        VBox root = new VBox(20, title, report);
+        Label sales = new Label("Total Sales : " + totalSales + " bath");
 
-        Scene scene = new Scene(root, 400, 300);
+        Label profitLabel = new Label("Profit : " + profit + " bath");
+
+        VBox root = new VBox(20,title,sales,profitLabel);
+        root.setStyle("-fx-padding:20; -fx-alignment:center;");
+
+        Scene scene = new Scene(root,400,300);
 
         stage.setScene(scene);
         stage.setTitle("Dashboard");
+
         stage.show();
-
     }
-
 }

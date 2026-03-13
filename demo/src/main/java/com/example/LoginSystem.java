@@ -6,8 +6,12 @@ public class LoginSystem {
 
     private static HashMap<String, Member> members = new HashMap<>();
 
+    static {
+        members.put("owner", new Member("owner", "1234", "owner"));
+    }
+
     public static void register(String user, String pass) {
-        members.put(user, new Member(user, pass));
+        members.put(user, new Member(user, pass, "customer"));
     }
 
     public static Member login(String user, String pass) {
@@ -20,5 +24,4 @@ public class LoginSystem {
 
         return null;
     }
-
 }
