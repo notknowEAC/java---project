@@ -23,17 +23,33 @@ public class App extends Application {
         Label title = new Label("☕ PUNPUN Cafe");
         title.getStyleClass().add("title");
 
+        Label usernameLabel = new Label("User: Guest");
+        usernameLabel.setStyle("-fx-font-size:16px; -fx-font-weight:bold;");
+
+        if(LoginPage.currentMember != null){
+            usernameLabel.setText("User: " + LoginPage.currentMember.getUsername());
+        }
+
         Button loginBtn = new Button("Login");
 
     loginBtn.setOnAction(e -> {
-        LoginPage.show(new Stage());
+        Stage loginStage = new Stage();
+        loginStage.setOnHidden(event -> {
+            currentMember = LoginPage.currentMember;
+            if(currentMember != null){
+                usernameLabel.setText("User: " + currentMember.getUsername());
+            }else{
+                usernameLabel.setText("User: Guest");
+            }
+        });
+        LoginPage.show(loginStage);
     });
         ComboBox<String> menuBox = new ComboBox<>();
         menuBox.getItems().addAll(
             "Americano","Espresso","Cappuccino","Mocha","Latte",
             "Matcha","Thai Tea","Milk Tea","Chocolate","Lemon Tea",
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Macaron","Pudding","Pan Cake","Ice Cream"
+            "Matcha Custard","Macaron","Pudding","Pancake","Ice Cream"
         );
         menuBox.getSelectionModel().selectFirst();
 
@@ -44,6 +60,21 @@ public class App extends Application {
         ComboBox<String> sweetBox = new ComboBox<>();
         sweetBox.getItems().addAll("0%","50%","100%");
         sweetBox.getSelectionModel().selectFirst();
+
+        menuBox.valueProperty().addListener((obs, oldMenu, newMenu) -> {
+            boolean drinkMenu = isDrinkMenu(newMenu);
+            sizeBox.setDisable(!drinkMenu);
+            sweetBox.setDisable(!drinkMenu);
+
+            if(!drinkMenu){
+                sizeBox.getSelectionModel().select("S");
+                sweetBox.getSelectionModel().select("0%");
+            }
+        });
+
+        boolean initialDrinkMenu = isDrinkMenu(menuBox.getValue());
+        sizeBox.setDisable(!initialDrinkMenu);
+        sweetBox.setDisable(!initialDrinkMenu);
 
         javafx.beans.property.IntegerProperty quantity = new javafx.beans.property.SimpleIntegerProperty(1);
         Label quantityLabel = new Label();
@@ -104,26 +135,26 @@ public class App extends Application {
     String size = sizeBox.getValue();
     String sweet = sweetBox.getValue();
     int qty = quantity.get();
+    boolean drinkMenu = isDrinkMenu(menu);
 
-    int price = Size.getPrice(size) + 60;
+    int basePrice = Menu.getBasePrice(menu);
+    int price = drinkMenu ? basePrice + Size.getPrice(size) : basePrice;
     int subtotal = price * qty;
 
     total += subtotal;
 
-    if(LoginPage.currentMember != null){
-
-        int point = PointSystem.calculatePoint(subtotal);
-
-        LoginPage.currentMember.addPoint(point);
-
-    }
-
     JSONDatabase.saveOrder(menu, subtotal);
 
-    orderArea.appendText(
+        if(drinkMenu){
+        orderArea.appendText(
             menu + " " + size + " " + sweet +
             " x" + qty + " = " + subtotal + " bath\n"
-    );
+        );
+        }else{
+        orderArea.appendText(
+            menu + " x" + qty + " = " + subtotal + " bath\n"
+        );
+        }
 
     totalLabel.setText("Total : " + total + " bath");
 });
@@ -195,32 +226,52 @@ public class App extends Application {
 
         Button confirmBtn = new Button("Confirm Order");
         confirmBtn.setOnAction(e -> {
+            int pointThisTime = 0;
+            int totalPoint = 0;
+
+            if(LoginPage.currentMember != null){
+                pointThisTime = PointSystem.calculatePoint(total);
+                LoginPage.currentMember.addPoint(pointThisTime);
+                totalPoint = LoginPage.currentMember.getPoint();
+            }
+
             Receipt receipt = new Receipt(
                     orderArea.getText(),
                     total,
-                    LoginPage.currentMember != null ? LoginPage.currentMember.getPoint() : 0);
+                    pointThisTime);
 
             Stage receiptStage = new Stage();
 
-            Label receipttitle = new Label("☕ PUNPUN Cafe\n" +"Receipt");
+            Label cafeTitle = new Label("☕ PUNPUN Cafe");
+            cafeTitle.setTextAlignment(TextAlignment.CENTER);
+            cafeTitle.setAlignment(Pos.CENTER);
+            cafeTitle.setMaxWidth(Double.MAX_VALUE);
+            cafeTitle.setStyle("-fx-font-size:22px; -fx-font-weight:bold;");
 
-            receipttitle.setTextAlignment(TextAlignment.CENTER);
-            receipttitle.setAlignment(Pos.CENTER);
-            receipttitle.setMaxWidth(Double.MAX_VALUE);
-            receipttitle.setStyle("-fx-font-size:22px; -fx-font-weight:bold;");
+            Label receiptSubtitle = new Label("Receipt");
+            receiptSubtitle.setTextAlignment(TextAlignment.CENTER);
+            receiptSubtitle.setAlignment(Pos.CENTER);
+            receiptSubtitle.setMaxWidth(Double.MAX_VALUE);
+            receiptSubtitle.setStyle("-fx-font-size:18px; -fx-font-weight:bold;");
             
-            Label information = new Label("123/45, College of Computing Building, Khonkaen\n       Tel: 088-xxx-xxxx, www.punpun-cafe.com");
+            Label information = new Label("123/45, College of Computing Building, Khonkaen");
             information.setTextAlignment(TextAlignment.LEFT);
             information.setAlignment(Pos.CENTER_LEFT);
             information.setStyle("-fx-font-size:14px;");
+            information.setMaxWidth(Double.MAX_VALUE);
+
+            Label contactInfo = new Label("Tel: 088-xxx-xxxx   |   www.punpun-cafe.com");
+            contactInfo.setTextAlignment(TextAlignment.LEFT);
+            contactInfo.setAlignment(Pos.CENTER_LEFT);
+            contactInfo.setStyle("-fx-font-size:13px;");
+            contactInfo.setMaxWidth(Double.MAX_VALUE);
 
             TextArea detailText = new TextArea();
             detailText.setText(
                     "Order Detail\n" +
                             "-------------------\n" +
                             orderArea.getText() +
-                            "\nTotal : " + total +
-                            "\nPoint : " + receipt.getPoint());
+                        "\nTotal : " + total);
             detailText.setStyle("-fx-font-family: monospace; -fx-font-size:18px;");
             detailText.setEditable(false);
             detailText.setWrapText(true);
@@ -229,18 +280,43 @@ public class App extends Application {
             detailText.setMaxHeight(Double.MAX_VALUE);
             VBox.setVgrow(detailText, Priority.ALWAYS);
 
+                String customerName = LoginPage.currentMember != null
+                    ? LoginPage.currentMember.getUsername()
+                    : "Guest";
+                Label customerLabel = new Label("Customer: " + customerName);
+                customerLabel.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
+                customerLabel.setAlignment(Pos.CENTER_LEFT);
+                customerLabel.setMaxWidth(Double.MAX_VALUE);
+
+                    String purchaseDateTime = java.time.LocalDateTime.now()
+                        .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+                    Label dateTimeLabel = new  Label("Date/Time: " + purchaseDateTime);
+                    dateTimeLabel.setStyle("-fx-font-size:13px;");
+                    dateTimeLabel.setAlignment(Pos.CENTER_LEFT);
+                    dateTimeLabel.setMaxWidth(Double.MAX_VALUE);
+
+                    Label pointThisTimeLabel = new Label("Point : " + receipt.getPoint());
+                    pointThisTimeLabel.setStyle("-fx-font-size:13px; -fx-font-weight:bold;");
+                    pointThisTimeLabel.setAlignment(Pos.CENTER_LEFT);
+                    pointThisTimeLabel.setMaxWidth(Double.MAX_VALUE);
+
+                    Label totalPointLabel = new Label("Total point: " + totalPoint);
+                    totalPointLabel.setStyle("-fx-font-size:13px; -fx-font-weight:bold;");
+                    totalPointLabel.setAlignment(Pos.CENTER_LEFT);
+                    totalPointLabel.setMaxWidth(Double.MAX_VALUE);
+
             Label thankyou = new Label("Thank you for your order!");
             thankyou.setStyle("-fx-font-size:14px; ");
             thankyou.setTextAlignment(TextAlignment.CENTER);
             thankyou.setAlignment(Pos.CENTER);
-            VBox layout = new VBox(10, receipttitle,information, detailText, thankyou);
+                            VBox layout = new VBox(12, cafeTitle, receiptSubtitle, information, contactInfo, detailText, customerLabel, dateTimeLabel, pointThisTimeLabel, totalPointLabel, thankyou);
             layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
             layout.setStyle("-fx-padding:20;");
 
             StackPane root = new StackPane(layout);
             root.setAlignment(javafx.geometry.Pos.CENTER);
 
-            Scene scene = new Scene(root, 480, 520);
+            Scene scene = new Scene(root, 560, 620);
 
             receiptStage.setTitle("Receipt");
             receiptStage.setScene(scene);
@@ -252,15 +328,34 @@ public class App extends Application {
             totalLabel.setText("Total : 0");
             quantity.set(1);
         });
+
+        Button clearBtn = new Button("Clear Order");
+        clearBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        clearBtn.setOnAction(e -> {
+            orderArea.clear();
+            total = 0;
+            totalLabel.setText("Total : 0");
+            quantity.set(1);
+
+            Alert clearAlert = new Alert(Alert.AlertType.INFORMATION);
+            clearAlert.setTitle("Clear Order");
+            clearAlert.setHeaderText(null);
+            clearAlert.setContentText("Order list cleared.");
+            clearAlert.showAndWait();
+        });
+
+        HBox orderButtons = new HBox(10, confirmBtn, clearBtn);
+        orderButtons.setAlignment(Pos.CENTER);
+
         VBox orderCard = new VBox(10,
                 new Label("Order List"),
                 orderArea,
                 totalLabel,
-                confirmBtn);
+                orderButtons);
         orderCard.setStyle("-fx-font-size: 22px;");
         orderCard.getStyleClass().add("card");
 
-        VBox topBar = new VBox(10, title, loginBtn);
+        VBox topBar = new VBox(10, title, usernameLabel, loginBtn);
         topBar.setAlignment(javafx.geometry.Pos.TOP_LEFT);
 
         VBox mainContent = new VBox(20, topBar, gallery, form, addBtn, orderCard);
@@ -342,5 +437,27 @@ public class App extends Application {
 
     public static void main(String[] args){
         launch();
+    }
+
+    private boolean isDrinkMenu(String menuName){
+        if(menuName == null){
+            return false;
+        }
+
+        switch(menuName){
+            case "Americano":
+            case "Espresso":
+            case "Cappuccino":
+            case "Mocha":
+            case "Latte":
+            case "Matcha":
+            case "Thai Tea":
+            case "Milk Tea":
+            case "Chocolate":
+            case "Lemon Tea":
+                return true;
+            default:
+                return false;
+        }
     }
 }

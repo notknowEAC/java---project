@@ -2,6 +2,8 @@ package com.example;
 
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -95,5 +97,56 @@ public class JSONDatabase {
         }
 
         return total;
+    }
+
+    public static void clearOrders(){
+
+        try{
+
+            FileWriter file = new FileWriter("orders.json");
+            file.write("[]");
+            file.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static String generateReport(){
+
+        JSONArray orders = loadOrders();
+
+        if(orders.isEmpty()){
+            return "No sales data";
+        }
+
+        Map<String, Integer> quantityByMenu = new LinkedHashMap<>();
+        Map<String, Integer> totalByMenu = new LinkedHashMap<>();
+
+        for(Object o : orders){
+
+            JSONObject obj = (JSONObject) o;
+
+            String menu = (String) obj.get("menu");
+            long priceLong = (long) obj.get("price");
+            int price = (int) priceLong;
+
+            quantityByMenu.put(menu, quantityByMenu.getOrDefault(menu, 0) + 1);
+            totalByMenu.put(menu, totalByMenu.getOrDefault(menu, 0) + price);
+        }
+
+        StringBuilder report = new StringBuilder();
+        report.append(String.format("%-18s %10s %8s %10s\n", "Product", "Price", "Qty", "Total"));
+        report.append("--------------------------------------------------------\n");
+
+        for(String menu : quantityByMenu.keySet()){
+            int qty = quantityByMenu.get(menu);
+            int total = totalByMenu.get(menu);
+            int avgPrice = total / qty;
+
+            report.append(String.format("%-18s %10d %8d %10d\n", menu, avgPrice, qty, total));
+        }
+
+        return report.toString();
     }
 }

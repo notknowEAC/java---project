@@ -13,19 +13,6 @@ public class Receipt {
     }
 
     public int getPoint() {
-        if (total%10 == 0) {
-            point= total%10;
-        }
-        else if(total%10 >= 5){
-                int p=total%10;
-                total=total-p;
-                point=(total%10)+1;
-        }
-        else if(total%10 < 5){
-                int p=total%10;
-                total=total-p;
-                point=total%10;
-        }
         return point;
     }
 
