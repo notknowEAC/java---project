@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.beans.property.*;
 
 public class App extends Application {
 
@@ -42,14 +43,50 @@ public class App extends Application {
         sweetBox.getItems().addAll("0%","50%","100%");
         sweetBox.getSelectionModel().selectFirst();
 
-        ComboBox<String> quantityBox = new ComboBox<>();
-        quantityBox.getItems().addAll("1","2","3","4","5");
-        quantityBox.getSelectionModel().selectFirst();
+        javafx.beans.property.IntegerProperty quantity = new javafx.beans.property.SimpleIntegerProperty(1);
+        Label quantityLabel = new Label();
+        quantityLabel.textProperty().bind(quantity.asString());
+        quantityLabel.setStyle("-fx-font-size: 16px; -fx-padding: 0;");
+
+        Button minusQtyBtn = new Button("-");
+        minusQtyBtn.setOnAction(e -> {
+            if (quantity.get() > 1) {
+                quantity.set(quantity.get() - 1);
+                
+            }
+        });
+        minusQtyBtn.setPrefWidth(28);
+        minusQtyBtn.setMinWidth(28);
+        minusQtyBtn.setMaxWidth(28);
+        minusQtyBtn.setPrefHeight(28);
+        minusQtyBtn.setMinHeight(28);
+        minusQtyBtn.setMaxHeight(28);
+        minusQtyBtn.setAlignment(javafx.geometry.Pos.CENTER);
+        minusQtyBtn.setStyle("-fx-font-size: 14px; -fx-padding: 0;");
+
+        Button plusQtyBtn = new Button("+");
+        plusQtyBtn.setOnAction(e -> {
+            if (quantity.get() < 99) {
+                quantity.set(quantity.get() + 1);
+            }
+        });
+        plusQtyBtn.setPrefWidth(28);
+        plusQtyBtn.setMinWidth(28);
+        plusQtyBtn.setMaxWidth(28);
+        plusQtyBtn.setPrefHeight(28);
+        plusQtyBtn.setMinHeight(28);
+        plusQtyBtn.setMaxHeight(28);
+        plusQtyBtn.setAlignment(javafx.geometry.Pos.CENTER);
+        plusQtyBtn.setStyle("-fx-font-size: 14px; -fx-padding: 0;");
+
+        HBox quantitySelector = new HBox(6, minusQtyBtn, quantityLabel, plusQtyBtn);
+        quantitySelector.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Button addBtn = new Button("Add Order");
 
         TextArea orderArea = new TextArea();
         orderArea.setPrefHeight(150);
+        orderArea.getStyleClass().add("order-list");
 
         Label totalLabel = new Label("Total : 0");
         totalLabel.getStyleClass().add("title");
@@ -59,7 +96,7 @@ public class App extends Application {
     String menu = menuBox.getValue();
     String size = sizeBox.getValue();
     String sweet = sweetBox.getValue();
-    int qty = Integer.parseInt(quantityBox.getValue());
+    int qty = quantity.get();
 
     int price = Size.getPrice(size) + 50;
     int subtotal = price * qty;
@@ -98,7 +135,7 @@ public class App extends Application {
         form.add(sweetBox,1,2);
 
         form.add(new Label("Quantity"),0,3);
-        form.add(quantityBox,1,3);
+        form.add(quantitySelector,1,3);
 
         GridPane gallery = new GridPane();
         gallery.setHgap(12);
@@ -121,7 +158,7 @@ public class App extends Application {
 
         for (int i = 0; i < drinkNames.length; i++) {
             gallery.add(
-                createBeverageCard(drinkNames[i], drinkPaths[i], menuBox, sizeBox, sweetBox, quantityBox),
+                createBeverageCard(drinkNames[i], drinkPaths[i], menuBox, sizeBox, sweetBox, quantity),
                 i % 5,
                 (i / 5) + 1
             );
@@ -129,7 +166,7 @@ public class App extends Application {
 
         String[] dessertNames = {
             "Butter Cake","Chocolate Cake","Cookie","Crepes","Croissant",
-            "Matcha Custard","Macaron","Pudding","Pan Cake","Ice Cream"
+            "Matcha Custard","Macaron","Pudding","Pancake","Ice Cream"
         };
 
         String[] dessertPaths = {
@@ -143,16 +180,32 @@ public class App extends Application {
 
         for (int i = 0; i < dessertNames.length; i++) {
             gallery.add(
-                createBeverageCard(dessertNames[i], dessertPaths[i], menuBox, sizeBox, sweetBox, quantityBox),
+                createBeverageCard(dessertNames[i], dessertPaths[i], menuBox, sizeBox, sweetBox, quantity),
                 i % 5,
                 (i / 5) + 4
             );
         }
 
+        Button confirmBtn = new Button("Confirm Order");
+        confirmBtn.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Order Confirmed");
+            alert.setHeaderText(null);
+            alert.setContentText("Your order has been confirmed. Thank you!");
+            alert.showAndWait();
+
+            // reset order list and total
+            orderArea.clear();
+            total = 0;
+            totalLabel.setText("Total : 0");
+            quantity.set(1);
+        });
+
         VBox orderCard = new VBox(10,
         new Label("Order List"),
         orderArea,
-        totalLabel
+        totalLabel,
+        confirmBtn
         );
 
         orderCard.getStyleClass().add("card");
@@ -192,7 +245,7 @@ public class App extends Application {
             ComboBox<String> menuBox,
             ComboBox<String> sizeBox,
             ComboBox<String> sweetBox,
-            ComboBox<String> quantityBox
+            javafx.beans.property.IntegerProperty quantity
     ) {
 
         Image image;
@@ -232,7 +285,7 @@ public class App extends Application {
             menuBox.setValue(name);
             sizeBox.getSelectionModel().selectFirst();
             sweetBox.getSelectionModel().selectFirst();
-            quantityBox.getSelectionModel().selectFirst();
+            quantity.set(1);
         });
 
         return card;

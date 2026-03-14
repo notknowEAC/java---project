@@ -54,3 +54,8 @@
     -fx-background-radius:12;
     -fx-font-size:14px;
 }
+
+/* Order List */
+.order-list{
+    -fx-font-size:18px;
+}
