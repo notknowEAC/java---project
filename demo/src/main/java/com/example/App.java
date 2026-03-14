@@ -2,9 +2,11 @@ package com.example;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -200,11 +202,18 @@ public class App extends Application {
 
             Stage receiptStage = new Stage();
 
-            Label receipttitle = new Label("Receipt");
+            Label receipttitle = new Label("☕ PUNPUN Cafe\n" +"Receipt");
+
+            receipttitle.setTextAlignment(TextAlignment.CENTER);
+            receipttitle.setAlignment(Pos.CENTER);
             receipttitle.setMaxWidth(Double.MAX_VALUE);
-            receipttitle.setAlignment(javafx.geometry.Pos.CENTER);
-            receipttitle.setStyle("-fx-font-size:24px; -fx-font-weight:bold;");
+            receipttitle.setStyle("-fx-font-size:22px; -fx-font-weight:bold;");
             
+            Label information = new Label("123/45, College of Computing Building, Khonkaen\n      Tel: 088-xxx-xxxx, www.punpun-cafe.com");
+            information.setTextAlignment(TextAlignment.LEFT);
+            information.setAlignment(Pos.CENTER_LEFT);
+            information.setStyle("-fx-font-size:14px;");
+
             TextArea detailText = new TextArea();
             detailText.setText(
                     "Order Detail\n" +
@@ -217,8 +226,10 @@ public class App extends Application {
             detailText.setWrapText(true);
             detailText.setPrefWidth(440);
             detailText.setPrefHeight(260);
+            detailText.setMaxHeight(Double.MAX_VALUE);
+            VBox.setVgrow(detailText, Priority.ALWAYS);
 
-            VBox layout = new VBox(10, receipttitle, detailText);
+            VBox layout = new VBox(10, receipttitle,information, detailText);
             layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
             layout.setStyle("-fx-padding:20;");
 
