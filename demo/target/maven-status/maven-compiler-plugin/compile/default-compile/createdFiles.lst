@@ -1,17 +1,10 @@
-com\example\LoginPage.class
 com\example\model\Drink.class
 com\example\database\JSONDatabase.class
 com\example\model\Order.class
-com\example\App.class
-com\example\dashboard\CustomerDashboard.class
 com\example\model\Dessert.class
 com\example\model\Member.class
-com\example\page\CustomerPage.class
-com\example\auth\LoginPage.class
 com\example\service\Size.class
 com\example\auth\LoginSystem.class
-com\example\dashboard\OwnerDashboard.class
 com\example\util\Receipt.class
 com\example\service\PointSystem.class
 com\example\model\Menu.class
-com\example\auth\RegisterPage.class
