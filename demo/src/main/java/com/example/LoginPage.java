@@ -1,5 +1,11 @@
 package com.example;
 
+import com.example.auth.LoginSystem;
+import com.example.auth.RegisterPage;
+import com.example.dashboard.CustomerDashboard;
+import com.example.dashboard.OwnerDashboard;
+import com.example.model.Member;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
