@@ -209,7 +209,7 @@ public class App extends Application {
             receipttitle.setMaxWidth(Double.MAX_VALUE);
             receipttitle.setStyle("-fx-font-size:22px; -fx-font-weight:bold;");
             
-            Label information = new Label("123/45, College of Computing Building, Khonkaen\n      Tel: 088-xxx-xxxx, www.punpun-cafe.com");
+            Label information = new Label("123/45, College of Computing Building, Khonkaen\n       Tel: 088-xxx-xxxx, www.punpun-cafe.com");
             information.setTextAlignment(TextAlignment.LEFT);
             information.setAlignment(Pos.CENTER_LEFT);
             information.setStyle("-fx-font-size:14px;");
@@ -229,7 +229,11 @@ public class App extends Application {
             detailText.setMaxHeight(Double.MAX_VALUE);
             VBox.setVgrow(detailText, Priority.ALWAYS);
 
-            VBox layout = new VBox(10, receipttitle,information, detailText);
+            Label thankyou = new Label("Thank you for your order!");
+            thankyou.setStyle("-fx-font-size:14px; ");
+            thankyou.setTextAlignment(TextAlignment.CENTER);
+            thankyou.setAlignment(Pos.CENTER);
+            VBox layout = new VBox(10, receipttitle,information, detailText, thankyou);
             layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
             layout.setStyle("-fx-padding:20;");
 
