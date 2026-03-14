@@ -1,8 +1,9 @@
 package com.example;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class LoginPage {
@@ -11,50 +12,60 @@ public class LoginPage {
 
     public static void show(Stage stage){
 
-        TextField userField = new TextField();
-        PasswordField passField = new PasswordField();
+        Label title = new Label("☕ PUNPUN Cafe Login");
+        title.setStyle("-fx-font-size:24px; -fx-font-weight:bold;");
+
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username");
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+
+        Label message = new Label();
 
         Button loginBtn = new Button("Login");
-        Button registerBtn = new Button("Register");
-
-        VBox root = new VBox(10,
-                new Label("Username"),
-                userField,
-                new Label("Password"),
-                passField,
-                loginBtn,
-                registerBtn
-        );
+        loginBtn.setPrefWidth(200);
 
         loginBtn.setOnAction(e -> {
 
-    Member m = LoginSystem.login(
-            userField.getText(),
-            passField.getText()
-    );
+            String username = usernameField.getText();
+            String password = passwordField.getText();
 
-    if(m != null){
+            Member m = LoginSystem.login(username,password);
 
-        currentMember = m;
+            if(m != null){
 
-        if(m.getRole().equals("owner")){
-            OwnerDashboard.showDashboard();
-        }else{
-            CustomerDashboard.showDashboard(m);
-        }
+                currentMember = m;
 
-        stage.close(); // ปิดหน้า login
+                message.setText("Login success");
 
-    }else{
-        new Alert(Alert.AlertType.ERROR,"Login Failed").show();
-    }
+                if(m.getRole().equals("owner")){
+                    OwnerDashboard.showDashboard();
+                }else{
+                    CustomerDashboard.showDashboard(m);
+                }
 
-});
+                stage.close();
+
+            }else{
+
+                message.setText("Username or Password incorrect");
+
+            }
+
+        });
+
+        Button registerBtn = new Button("Register");
+        registerBtn.setPrefWidth(200);
 
         registerBtn.setOnAction(e -> RegisterPage.show(stage));
 
-        stage.setScene(new Scene(root,300,250));
-        stage.setTitle("Login");
+        VBox root = new VBox(15,title,usernameField,passwordField,message,loginBtn,registerBtn);
+        root.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(root,400,350);
+
+        stage.setScene(scene);
         stage.show();
     }
 }
