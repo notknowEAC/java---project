@@ -1,5 +1,12 @@
 package com.example;
 
+import com.example.auth.LoginPage;
+import com.example.database.JSONDatabase;
+import com.example.model.Member;
+import com.example.service.PointSystem;
+import com.example.service.Size;
+import com.example.util.Receipt;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
