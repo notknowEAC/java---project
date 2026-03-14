@@ -31,7 +31,7 @@ public class App extends Application {
         title.getStyleClass().add("title");
 
         Label usernameLabel = new Label("User: Guest");
-        usernameLabel.setStyle("-fx-font-size:16px; -fx-font-weight:bold;");
+        usernameLabel.getStyleClass().add("username-label");
 
         if(LoginPage.currentMember != null){
             usernameLabel.setText("User: " + LoginPage.currentMember.getUsername());
@@ -86,7 +86,7 @@ public class App extends Application {
         javafx.beans.property.IntegerProperty quantity = new javafx.beans.property.SimpleIntegerProperty(1);
         Label quantityLabel = new Label();
         quantityLabel.textProperty().bind(quantity.asString());
-        quantityLabel.setStyle("-fx-font-size: 16px; -fx-padding: 0;");
+        quantityLabel.getStyleClass().add("quantity-label");
 
         Button minusQtyBtn = new Button("-");
         minusQtyBtn.setOnAction(e -> {
@@ -102,7 +102,7 @@ public class App extends Application {
         minusQtyBtn.setMinHeight(28);
         minusQtyBtn.setMaxHeight(28);
         minusQtyBtn.setAlignment(javafx.geometry.Pos.CENTER);
-        minusQtyBtn.setStyle("-fx-font-size: 14px; -fx-padding: 0;");
+        minusQtyBtn.getStyleClass().add("qty-button");
 
         Button plusQtyBtn = new Button("+");
         plusQtyBtn.setOnAction(e -> {
@@ -117,7 +117,7 @@ public class App extends Application {
         plusQtyBtn.setMinHeight(28);
         plusQtyBtn.setMaxHeight(28);
         plusQtyBtn.setAlignment(javafx.geometry.Pos.CENTER);
-        plusQtyBtn.setStyle("-fx-font-size: 14px; -fx-padding: 0;");
+        plusQtyBtn.getStyleClass().add("qty-button");
 
         HBox quantitySelector = new HBox(6, minusQtyBtn, quantityLabel, plusQtyBtn);
         quantitySelector.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -198,7 +198,7 @@ public class App extends Application {
         };
 
         Label cat1 = new Label("☕ Drinks");
-        cat1.setStyle("-fx-font-size:20px; -fx-font-weight:bold;");
+        cat1.getStyleClass().add("category-label");
         gallery.add(cat1, 2, 0, 5, 1);
 
         for (int i = 0; i < drinkNames.length; i++) {
@@ -220,7 +220,7 @@ public class App extends Application {
         };
 
         Label cat2 = new Label("🍰 Dessert");
-        cat2.setStyle("-fx-font-size:20px; -fx-font-weight:bold;");
+        cat2.getStyleClass().add("category-label");
         gallery.add(cat2, 2, 3, 5, 1);
 
         for (int i = 0; i < dessertNames.length; i++) {
@@ -253,24 +253,24 @@ public class App extends Application {
             cafeTitle.setTextAlignment(TextAlignment.CENTER);
             cafeTitle.setAlignment(Pos.CENTER);
             cafeTitle.setMaxWidth(Double.MAX_VALUE);
-            cafeTitle.setStyle("-fx-font-size:22px; -fx-font-weight:bold;");
+            cafeTitle.getStyleClass().add("receipt-title");
 
             Label receiptSubtitle = new Label("Receipt");
             receiptSubtitle.setTextAlignment(TextAlignment.CENTER);
             receiptSubtitle.setAlignment(Pos.CENTER);
             receiptSubtitle.setMaxWidth(Double.MAX_VALUE);
-            receiptSubtitle.setStyle("-fx-font-size:18px; -fx-font-weight:bold;");
+            receiptSubtitle.getStyleClass().add("receipt-subtitle");
             
             Label information = new Label("123/45, College of Computing Building, Khonkaen");
             information.setTextAlignment(TextAlignment.LEFT);
             information.setAlignment(Pos.CENTER_LEFT);
-            information.setStyle("-fx-font-size:14px;");
+            information.getStyleClass().add("receipt-info");
             information.setMaxWidth(Double.MAX_VALUE);
 
             Label contactInfo = new Label("Tel: 088-xxx-xxxx   |   www.punpun-cafe.com");
             contactInfo.setTextAlignment(TextAlignment.LEFT);
             contactInfo.setAlignment(Pos.CENTER_LEFT);
-            contactInfo.setStyle("-fx-font-size:13px;");
+            contactInfo.getStyleClass().add("receipt-contact");
             contactInfo.setMaxWidth(Double.MAX_VALUE);
 
             TextArea detailText = new TextArea();
@@ -279,7 +279,7 @@ public class App extends Application {
                             "-------------------\n" +
                             orderArea.getText() +
                         "\nTotal : " + total);
-            detailText.setStyle("-fx-font-family: monospace; -fx-font-size:18px;");
+            detailText.getStyleClass().add("receipt-detail");
             detailText.setEditable(false);
             detailText.setWrapText(true);
             detailText.setPrefWidth(440);
@@ -291,34 +291,34 @@ public class App extends Application {
                     ? LoginPage.currentMember.getUsername()
                     : "Guest";
                 Label customerLabel = new Label("Customer: " + customerName);
-                customerLabel.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
+                customerLabel.getStyleClass().add("receipt-customer");
                 customerLabel.setAlignment(Pos.CENTER_LEFT);
                 customerLabel.setMaxWidth(Double.MAX_VALUE);
 
                     String purchaseDateTime = java.time.LocalDateTime.now()
                         .format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
                     Label dateTimeLabel = new  Label("Date/Time: " + purchaseDateTime);
-                    dateTimeLabel.setStyle("-fx-font-size:13px;");
+                    dateTimeLabel.getStyleClass().add("receipt-datetime");
                     dateTimeLabel.setAlignment(Pos.CENTER_LEFT);
                     dateTimeLabel.setMaxWidth(Double.MAX_VALUE);
 
                     Label pointThisTimeLabel = new Label("Point : " + receipt.getPoint());
-                    pointThisTimeLabel.setStyle("-fx-font-size:13px; -fx-font-weight:bold;");
+                    pointThisTimeLabel.getStyleClass().add("receipt-point");
                     pointThisTimeLabel.setAlignment(Pos.CENTER_LEFT);
                     pointThisTimeLabel.setMaxWidth(Double.MAX_VALUE);
 
                     Label totalPointLabel = new Label("Total point: " + totalPoint);
-                    totalPointLabel.setStyle("-fx-font-size:13px; -fx-font-weight:bold;");
+                    totalPointLabel.getStyleClass().add("receipt-point");
                     totalPointLabel.setAlignment(Pos.CENTER_LEFT);
                     totalPointLabel.setMaxWidth(Double.MAX_VALUE);
 
             Label thankyou = new Label("Thank you for your order!");
-            thankyou.setStyle("-fx-font-size:14px; ");
+            thankyou.getStyleClass().add("thankyou");
             thankyou.setTextAlignment(TextAlignment.CENTER);
             thankyou.setAlignment(Pos.CENTER);
                             VBox layout = new VBox(12, cafeTitle, receiptSubtitle, information, contactInfo, detailText, customerLabel, dateTimeLabel, pointThisTimeLabel, totalPointLabel, thankyou);
             layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
-            layout.setStyle("-fx-padding:20;");
+            layout.getStyleClass().add("receipt-layout");
 
             StackPane root = new StackPane(layout);
             root.setAlignment(javafx.geometry.Pos.CENTER);
@@ -337,7 +337,7 @@ public class App extends Application {
         });
 
         Button clearBtn = new Button("Clear Order");
-        clearBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+        clearBtn.getStyleClass().add("clear-button");
         clearBtn.setOnAction(e -> {
             orderArea.clear();
             total = 0;
@@ -359,7 +359,7 @@ public class App extends Application {
                 orderArea,
                 totalLabel,
                 orderButtons);
-        orderCard.setStyle("-fx-font-size: 22px;");
+        orderCard.getStyleClass().add("order-card");
         orderCard.getStyleClass().add("card");
 
         VBox topBar = new VBox(10, title, usernameLabel, loginBtn);
@@ -415,7 +415,7 @@ public class App extends Application {
         imageView.setPreserveRatio(true);
 
         Label label = new Label(name);
-        label.setStyle("-fx-font-size:14px; -fx-font-weight:bold;");
+        label.getStyleClass().add("menu-label");
 
         VBox card = new VBox(5, imageView, label);
         card.setPadding(new Insets(10));

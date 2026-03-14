@@ -59,3 +59,83 @@
 .order-list{
     -fx-font-size:18px;
 }
+
+/* Application specific labels */
+.username-label {
+    -fx-font-size:16px;
+    -fx-font-weight:bold;
+}
+
+.quantity-label {
+    -fx-font-size:16px;
+    -fx-padding: 0;
+}
+
+.qty-button {
+    -fx-font-size:14px;
+    -fx-padding: 0;
+}
+
+.category-label {
+    -fx-font-size:20px;
+    -fx-font-weight:bold;
+}
+
+.receipt-title {
+    -fx-font-size:22px;
+    -fx-font-weight:bold;
+}
+
+.receipt-subtitle {
+    -fx-font-size:18px;
+    -fx-font-weight:bold;
+}
+
+.receipt-info {
+    -fx-font-size:14px;
+}
+
+.receipt-contact {
+    -fx-font-size:13px;
+}
+
+.receipt-detail {
+    -fx-font-family: monospace;
+    -fx-font-size:18px;
+}
+
+.receipt-customer {
+    -fx-font-size:14px;
+    -fx-font-weight:bold;
+}
+
+.receipt-datetime {
+    -fx-font-size:13px;
+}
+
+.receipt-point {
+    -fx-font-size:13px;
+    -fx-font-weight:bold;
+}
+
+.thankyou {
+    -fx-font-size:14px;
+}
+
+.receipt-layout {
+    -fx-padding:20;
+}
+
+.clear-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.order-card {
+    -fx-font-size: 22px;
+}
+
+.menu-label {
+    -fx-font-size:14px;
+    -fx-font-weight:bold;
+}

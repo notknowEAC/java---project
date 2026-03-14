@@ -3,7 +3,9 @@ package com.example.database;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -87,18 +89,12 @@ public class JSONDatabase {
 
         JSONArray orders = loadOrders();
 
-        int total = 0;
+        @SuppressWarnings("unchecked")
+        List<JSONObject> orderList = (List<JSONObject>)(List<?>) orders;
 
-        for(Object o:orders){
-
-            JSONObject obj = (JSONObject)o;
-
-            long price = (long)obj.get("price");
-
-            total += price;
-        }
-
-        return total;
+        return orderList.stream()
+            .mapToInt(obj -> ((Long) obj.get("price")).intValue())
+            .sum();
     }
 
     public static void clearOrders(){
@@ -122,27 +118,27 @@ public class JSONDatabase {
             return "No sales data";
         }
 
-        Map<String, Integer> quantityByMenu = new LinkedHashMap<>();
-        Map<String, Integer> totalByMenu = new LinkedHashMap<>();
+        @SuppressWarnings("unchecked")
+        List<JSONObject> orderList = (List<JSONObject>)(List<?>) orders;
 
-        for(Object o : orders){
+        Map<String, Long> quantityByMenu = orderList.stream()
+            .collect(Collectors.groupingBy(
+                obj -> (String) obj.get("menu"),
+                LinkedHashMap::new,
+                Collectors.counting()));
 
-            JSONObject obj = (JSONObject) o;
-
-            String menu = (String) obj.get("menu");
-            long priceLong = (long) obj.get("price");
-            int price = (int) priceLong;
-
-            quantityByMenu.put(menu, quantityByMenu.getOrDefault(menu, 0) + 1);
-            totalByMenu.put(menu, totalByMenu.getOrDefault(menu, 0) + price);
-        }
+        Map<String, Integer> totalByMenu = orderList.stream()
+            .collect(Collectors.groupingBy(
+                obj -> (String) obj.get("menu"),
+                LinkedHashMap::new,
+                Collectors.summingInt(obj -> ((Long) obj.get("price")).intValue())));
 
         StringBuilder report = new StringBuilder();
         report.append(String.format("%-18s %10s %8s %10s\n", "Product", "Price", "Qty", "Total"));
         report.append("--------------------------------------------------------\n");
 
         for(String menu : quantityByMenu.keySet()){
-            int qty = quantityByMenu.get(menu);
+            int qty = quantityByMenu.get(menu).intValue();
             int total = totalByMenu.get(menu);
             int avgPrice = total / qty;
 

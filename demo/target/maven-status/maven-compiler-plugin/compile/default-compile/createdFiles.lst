@@ -1,5 +1,4 @@
 com\example\model\Drink.class
-com\example\database\JSONDatabase.class
 com\example\model\Order.class
 com\example\model\Dessert.class
 com\example\model\Member.class
