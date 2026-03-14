@@ -90,7 +90,9 @@ public class OwnerDashboard {
         );
 
         Scene scene = new Scene(root,760,520);
-
+        scene.getStylesheets().add(
+        OwnerDashboard.class.getResource("/style.css").toExternalForm()
+);
         stage.setTitle("Owner Dashboard");
         stage.setScene(scene);
         stage.show();

@@ -59,23 +59,43 @@ public class App extends Application {
             "Matcha Custard","Macaron","Pudding","Pancake","Ice Cream"
         );
         menuBox.getSelectionModel().selectFirst();
+        menuBox.getStyleClass().add("combo-box");
 
-        ComboBox<String> sizeBox = new ComboBox<>();
-        sizeBox.getItems().addAll("S","M","L");
-        sizeBox.getSelectionModel().selectFirst();
+        ToggleButton sizeS = new ToggleButton("S");
+        ToggleButton sizeM = new ToggleButton("M");
+        ToggleButton sizeL = new ToggleButton("L");
 
-        ComboBox<String> sweetBox = new ComboBox<>();
-        sweetBox.getItems().addAll("0%","50%","100%");
-        sweetBox.getSelectionModel().selectFirst();
+        ToggleGroup sizeGroup = new ToggleGroup();
+        sizeS.setToggleGroup(sizeGroup);
+        sizeM.setToggleGroup(sizeGroup);
+        sizeL.setToggleGroup(sizeGroup);
 
+        sizeM.setSelected(true);
+
+        HBox sizeBox = new HBox(10,sizeS,sizeM,sizeL);
+        sizeBox.setAlignment(Pos.CENTER_LEFT);
+
+        ToggleButton sweet0 = new ToggleButton("0%");
+        ToggleButton sweet50 = new ToggleButton("50%");
+        ToggleButton sweet100 = new ToggleButton("100%");
+
+        ToggleGroup sweetGroup = new ToggleGroup();
+        sweet0.setToggleGroup(sweetGroup);
+        sweet50.setToggleGroup(sweetGroup);
+        sweet100.setToggleGroup(sweetGroup);
+
+        sweet50.setSelected(true);
+
+        HBox sweetBox = new HBox(10,sweet0,sweet50,sweet100);
+        sweetBox.setAlignment(Pos.CENTER_LEFT);
         menuBox.valueProperty().addListener((obs, oldMenu, newMenu) -> {
             boolean drinkMenu = isDrinkMenu(newMenu);
             sizeBox.setDisable(!drinkMenu);
             sweetBox.setDisable(!drinkMenu);
 
             if(!drinkMenu){
-                sizeBox.getSelectionModel().select("S");
-                sweetBox.getSelectionModel().select("0%");
+                sizeS.setSelected(true);
+                sweet0.setSelected(true);
             }
         });
 
@@ -123,6 +143,7 @@ public class App extends Application {
         quantitySelector.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Button addBtn = new Button("Add Order");
+        addBtn.getStyleClass().add("button");
 
         TextArea orderArea = new TextArea();
         orderArea.setPrefSize(760,200);
@@ -139,8 +160,11 @@ public class App extends Application {
         addBtn.setOnAction(e -> {
 
     String menu = menuBox.getValue();
-    String size = sizeBox.getValue();
-    String sweet = sweetBox.getValue();
+    ToggleButton sizeSelected = (ToggleButton) sizeGroup.getSelectedToggle();
+    String size = sizeSelected.getText();
+
+    ToggleButton sweetSelected = (ToggleButton) sweetGroup.getSelectedToggle();
+    String sweet = sweetSelected.getText();
     int qty = quantity.get();
     boolean drinkMenu = isDrinkMenu(menu);
 
@@ -153,34 +177,52 @@ public class App extends Application {
     JSONDatabase.saveOrder(menu, subtotal);
 
         if(drinkMenu){
-        orderArea.appendText(
-            menu + " " + size + " " + sweet +
-            " x" + qty + " = " + subtotal + " bath\n"
-        );
+       orderArea.appendText(
+        String.format("%-25s %7d\n",
+                menu + " " + size + " " + sweet + " x" + qty,
+                subtotal
+        )
+);
         }else{
         orderArea.appendText(
-            menu + " x" + qty + " = " + subtotal + " bath\n"
-        );
+    String.format("%-25s %5d\n",
+        menu + " x" + qty,
+        subtotal
+    )
+);
         }
 
     totalLabel.setText("Total : " + total + " bath");
 });
 
         GridPane form = new GridPane();
-        form.setHgap(10);
-        form.setVgap(10);
+form.getStyleClass().add("selector-box");
+form.setHgap(10);
+form.setVgap(10);
 
-        form.add(new Label("Menu"),0,0);
-        form.add(menuBox,1,0);
+Label menuLabel = new Label("Menu");
+menuLabel.getStyleClass().add("selector-label");
 
-        form.add(new Label("Size"),0,1);
-        form.add(sizeBox,1,1);
+Label sizeLabel = new Label("Size");
+sizeLabel.getStyleClass().add("selector-label");
 
-        form.add(new Label("Sweet"),0,2);
-        form.add(sweetBox,1,2);
+Label sweetLabel = new Label("Sweet");
+sweetLabel.getStyleClass().add("selector-label");
 
-        form.add(new Label("Quantity"),0,3);
-        form.add(quantitySelector,1,3);
+Label quantityText = new Label("Quantity");
+quantityText.getStyleClass().add("selector-label");
+
+form.add(menuLabel,0,0);
+form.add(menuBox,1,0);
+
+form.add(sizeLabel,0,1);
+form.add(sizeBox,1,1);
+
+form.add(sweetLabel,0,2);
+form.add(sweetBox,1,2);
+
+form.add(quantityText,0,3);
+form.add(quantitySelector,1,3);
 
         GridPane gallery = new GridPane();
         gallery.setHgap(12);
@@ -203,7 +245,7 @@ public class App extends Application {
 
         for (int i = 0; i < drinkNames.length; i++) {
             gallery.add(
-                createBeverageCard(drinkNames[i], drinkPaths[i], menuBox, sizeBox, sweetBox, quantity),
+                createBeverageCard(drinkNames[i], drinkPaths[i], menuBox, sizeM, sweet50, quantity),
                 i % 5,
                 (i / 5) + 1
             );
@@ -225,13 +267,14 @@ public class App extends Application {
 
         for (int i = 0; i < dessertNames.length; i++) {
             gallery.add(
-                createBeverageCard(dessertNames[i], dessertPaths[i], menuBox, sizeBox, sweetBox, quantity),
+                createBeverageCard(dessertNames[i], dessertPaths[i], menuBox, sizeM, sweet50, quantity),
                 i % 5,
                 (i / 5) + 4
             );
         }
 
         Button confirmBtn = new Button("Confirm Order");
+        confirmBtn.getStyleClass().add("button");
         confirmBtn.setOnAction(e -> {
             int pointThisTime = 0;
             int totalPoint = 0;
@@ -274,11 +317,18 @@ public class App extends Application {
             contactInfo.setMaxWidth(Double.MAX_VALUE);
 
             TextArea detailText = new TextArea();
-            detailText.setText(
-                    "Order Detail\n" +
-                            "-------------------\n" +
-                            orderArea.getText() +
-                        "\nTotal : " + total);
+String line = "─".repeat(33);
+
+detailText.setText(
+        "Order Detail\n\n" +
+        orderArea.getText() +
+        line + "\n" +
+        String.format("%-25s %7d\n", "TOTAL", total) +
+        line
+);
+detailText.setEditable(false);
+detailText.setWrapText(true);
+detailText.setFocusTraversable(false);
             detailText.getStyleClass().add("receipt-detail");
             detailText.setEditable(false);
             detailText.setWrapText(true);
@@ -311,19 +361,44 @@ public class App extends Application {
                     totalPointLabel.getStyleClass().add("receipt-point");
                     totalPointLabel.setAlignment(Pos.CENTER_LEFT);
                     totalPointLabel.setMaxWidth(Double.MAX_VALUE);
-
+            Label totalPriceLabel = new Label("TOTAL : " + total + " Bath");
+totalPriceLabel.getStyleClass().add("receipt-total");
+totalPriceLabel.setAlignment(Pos.CENTER);
+totalPriceLabel.setMaxWidth(Double.MAX_VALUE);
             Label thankyou = new Label("Thank you for your order!");
             thankyou.getStyleClass().add("thankyou");
             thankyou.setTextAlignment(TextAlignment.CENTER);
             thankyou.setAlignment(Pos.CENTER);
-                            VBox layout = new VBox(12, cafeTitle, receiptSubtitle, information, contactInfo, detailText, customerLabel, dateTimeLabel, pointThisTimeLabel, totalPointLabel, thankyou);
+VBox layout = new VBox(
+        12,
+        cafeTitle,
+        receiptSubtitle,
+        information,
+        contactInfo,
+        new Separator(),
+        detailText,
+        new Separator(),
+        totalPriceLabel,
+        new Separator(),
+        customerLabel,
+        dateTimeLabel,
+        pointThisTimeLabel,
+        totalPointLabel,
+        thankyou
+);
+            
             layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
-            layout.getStyleClass().add("receipt-layout");
+            layout.getStyleClass().addAll("receipt-layout", "receipt-section");
 
             StackPane root = new StackPane(layout);
+            root.getStyleClass().add("receipt-root");
             root.setAlignment(javafx.geometry.Pos.CENTER);
 
             Scene scene = new Scene(root, 560, 620);
+
+scene.getStylesheets().add(
+        getClass().getResource("/style.css").toExternalForm()
+);
 
             receiptStage.setTitle("Receipt");
             receiptStage.setScene(scene);
@@ -391,13 +466,13 @@ public class App extends Application {
     }
 
     private VBox createBeverageCard(
-            String name,
-            String resourcePath,
-            ComboBox<String> menuBox,
-            ComboBox<String> sizeBox,
-            ComboBox<String> sweetBox,
-            javafx.beans.property.IntegerProperty quantity
-    ) {
+        String name,
+        String resourcePath,
+        ComboBox<String> menuBox,
+        ToggleButton sizeM,
+        ToggleButton sweet50,
+        IntegerProperty quantity
+) {
 
         Image image;
 
@@ -434,8 +509,8 @@ public class App extends Application {
 
         card.setOnMouseClicked(e -> {
             menuBox.setValue(name);
-            sizeBox.getSelectionModel().selectFirst();
-            sweetBox.getSelectionModel().selectFirst();
+            sizeM.setSelected(true);
+            sweet50.setSelected(true);
             quantity.set(1);
         });
 

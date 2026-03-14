@@ -17,32 +17,30 @@ public class LoginPage {
     public static void show(Stage stage){
 
         Label loginTitle = new Label("☕ PUNPUN Cafe");
-        loginTitle.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2d2d2d;");
+        loginTitle.getStyleClass().add("auth-title");
 
         Label subtitle = new Label("Sign in to continue");
-        subtitle.setStyle("-fx-font-size: 14px; -fx-text-fill: #6a6a6a;");
+        subtitle.getStyleClass().add("subtitle-label");
 
         Label userLabel = new Label("Username");
-        userLabel.setStyle("-fx-font-weight: bold;");
+        userLabel.getStyleClass().add("auth-label");
         TextField userField = new TextField();
         userField.setPromptText("Enter your username");
-        userField.setPrefHeight(40);
-        userField.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d7d7d7;");
+        userField.getStyleClass().add("auth-input");
 
         Label passLabel = new Label("Password");
-        passLabel.setStyle("-fx-font-weight: bold;");
+        passLabel.getStyleClass().add("auth-label");
         PasswordField passField = new PasswordField();
         passField.setPromptText("Enter your password");
-        passField.setPrefHeight(40);
-        passField.setStyle("-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d7d7d7;");
+        passField.getStyleClass().add("auth-input");
 
         Button loginBtn = new Button("Login");
+        loginBtn.getStyleClass().add("login-button");
         loginBtn.setMaxWidth(Double.MAX_VALUE);
-        loginBtn.setStyle("-fx-background-color: #6f4e37; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
 
         Button registerBtn = new Button("Register");
+        registerBtn.getStyleClass().add("register-button");
         registerBtn.setMaxWidth(Double.MAX_VALUE);
-        registerBtn.setStyle("-fx-background-color: white; -fx-text-fill: #6f4e37; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #6f4e37; -fx-border-radius: 10; -fx-background-radius: 10; -fx-pref-height: 40;");
 
         VBox card = new VBox(10,
             loginTitle,
@@ -55,13 +53,12 @@ public class LoginPage {
             registerBtn
         );
         card.setPadding(new Insets(24));
-        card.setAlignment(Pos.CENTER_LEFT);
+        card.setAlignment(Pos.CENTER);
         card.setMaxWidth(360);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #dddddd; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 14, 0, 0, 6);");
+        card.getStyleClass().add("auth-card");
 
         StackPane root = new StackPane(card);
         root.setPadding(new Insets(30));
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #f6f1eb, #e9dfd3);");
 
         loginBtn.setOnAction(e -> {
 
@@ -94,6 +91,10 @@ public class LoginPage {
         registerBtn.setOnAction(e -> RegisterPage.show(stage));
 
         Scene scene = new Scene(root, 420, 420);
+
+        scene.getStylesheets().add(
+        LoginPage.class.getResource("/style.css").toExternalForm()
+        );
         stage.setScene(scene);
         stage.setTitle("Login");
         stage.show();

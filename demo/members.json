@@ -1,7 +1,1 @@
-[{"password":"282090","role":"customer","username":"boss"},
-{"password":"282090","role":"customer","username":"boss 282090"},
-{"password":"","role":"customer","username":""},
-{"password":"12345678","role":"owner","username":"NotKnow"},
-{"password":"123456","role":"owner","username":"taeng thai"},
-{"password":"666666","role":"customer","username":"poy"},
-{"password":"111111","role":"customer","username":"abc"}]
+[{"password":"282090","role":"customer","username":"boss"},{"password":"282090","role":"customer","username":"boss 282090"},{"password":"","role":"customer","username":""},{"password":"12345678","role":"owner","username":"NotKnow"},{"password":"123456","role":"owner","username":"taeng thai"},{"password":"666666","role":"customer","username":"poy"},{"password":"111111","role":"customer","username":"abc"},{"password":"","role":"customer","username":""}]

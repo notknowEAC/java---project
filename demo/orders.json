@@ -1,5 +1,1 @@
-[{"price":100,"menu":"Coffee"}
-,{"price":100,"menu":"Coffee"}
-,{"price":100,"menu":"Coffee"}
-,{"price":100,"menu":"Coffee"}
-,{"price":180,"menu":"Americano"}]
+[{"price":65,"menu":"Espresso"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":70,"menu":"Americano"},{"price":80,"menu":"Cappuccino"},{"price":85,"menu":"Mocha"},{"price":70,"menu":"Milk Tea"}]
