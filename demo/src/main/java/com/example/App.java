@@ -105,7 +105,7 @@ public class App extends Application {
     String sweet = sweetBox.getValue();
     int qty = quantity.get();
 
-    int price = Size.getPrice(size) + 50;
+    int price = Size.getPrice(size) + 60;
     int subtotal = price * qty;
 
     total += subtotal;
