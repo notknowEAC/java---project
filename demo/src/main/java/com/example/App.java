@@ -85,7 +85,12 @@ public class App extends Application {
         Button addBtn = new Button("Add Order");
 
         TextArea orderArea = new TextArea();
-        orderArea.setPrefHeight(150);
+        orderArea.setPrefSize(760,200);
+        orderArea.setPrefSize(760,200);
+        orderArea.setMinSize(760, 200);
+        orderArea.setMaxSize(760, 200);
+        orderArea.setMaxWidth(Double.MAX_VALUE);
+        VBox.setVgrow(orderArea, Priority.ALWAYS);
         orderArea.getStyleClass().add("order-list");
 
         Label totalLabel = new Label("Total : 0");
@@ -188,26 +193,56 @@ public class App extends Application {
 
         Button confirmBtn = new Button("Confirm Order");
         confirmBtn.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Order Confirmed");
-            alert.setHeaderText(null);
-            alert.setContentText("Your order has been confirmed. Thank you!");
-            alert.showAndWait();
+            Receipt receipt = new Receipt(
+                    orderArea.getText(),
+                    total,
+                    LoginPage.currentMember != null ? LoginPage.currentMember.getPoint() : 0);
 
-            // reset order list and total
+            Stage receiptStage = new Stage();
+
+            Label receipttitle = new Label("Receipt");
+            receipttitle.setMaxWidth(Double.MAX_VALUE);
+            receipttitle.setAlignment(javafx.geometry.Pos.CENTER);
+            receipttitle.setStyle("-fx-font-size:24px; -fx-font-weight:bold;");
+            
+            TextArea detailText = new TextArea();
+            detailText.setText(
+                    "Order Detail\n" +
+                            "-------------------\n" +
+                            orderArea.getText() +
+                            "\nTotal : " + total +
+                            "\nPoint : " + receipt.getPoint());
+            detailText.setStyle("-fx-font-family: monospace; -fx-font-size:18px;");
+            detailText.setEditable(false);
+            detailText.setWrapText(true);
+            detailText.setPrefWidth(440);
+            detailText.setPrefHeight(260);
+
+            VBox layout = new VBox(10, receipttitle, detailText);
+            layout.setAlignment(javafx.geometry.Pos.TOP_CENTER);
+            layout.setStyle("-fx-padding:20;");
+
+            StackPane root = new StackPane(layout);
+            root.setAlignment(javafx.geometry.Pos.CENTER);
+
+            Scene scene = new Scene(root, 480, 520);
+
+            receiptStage.setTitle("Receipt");
+            receiptStage.setScene(scene);
+            receiptStage.show();
+
+
             orderArea.clear();
             total = 0;
             totalLabel.setText("Total : 0");
             quantity.set(1);
         });
-
         VBox orderCard = new VBox(10,
-        new Label("Order List"),
-        orderArea,
-        totalLabel,
-        confirmBtn
-        );
-
+                new Label("Order List"),
+                orderArea,
+                totalLabel,
+                confirmBtn);
+        orderCard.setStyle("-fx-font-size: 22px;");
         orderCard.getStyleClass().add("card");
 
         VBox topBar = new VBox(10, title, loginBtn);
@@ -231,8 +266,7 @@ public class App extends Application {
         Scene scene = new Scene(scrollPane, 900, 750);
 
         scene.getStylesheets().add(
-                getClass().getResource("/style.css").toExternalForm()
-        );
+                getClass().getResource("/style.css").toExternalForm());
 
         stage.setTitle("PUNPUN Cafe");
         stage.setScene(scene);
