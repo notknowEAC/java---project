@@ -38,7 +38,7 @@ public class Menu {
             case "Matcha Custard": return 70;
             case "Macaron": return 50;
             case "Pudding": return 55;
-            case "Pan Cake":
+            case "Pan Cake": return 60;
             case "Pancake": return 60;
             case "Ice Cream": return 50;
             default: return 60;

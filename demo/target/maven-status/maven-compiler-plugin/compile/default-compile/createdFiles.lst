@@ -1,9 +1,0 @@
-com\example\model\Drink.class
-com\example\model\Order.class
-com\example\model\Dessert.class
-com\example\model\Member.class
-com\example\service\Size.class
-com\example\auth\LoginSystem.class
-com\example\util\Receipt.class
-com\example\service\PointSystem.class
-com\example\model\Menu.class
